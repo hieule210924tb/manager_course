@@ -5,4 +5,4 @@ session_start(); // Tạo mới 1 phiên làm việc
 ob_start(); //tránh th bị lỗi
 
 require_once 'config.php';
-require_once './modules/auth/login.php';
+// require_once './modules/auth/login.php';
