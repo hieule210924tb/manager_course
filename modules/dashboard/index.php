@@ -2,3 +2,5 @@
 if (!defined('_HIEU')) {
     die('Truy cập không hợp lệ');
 }
+?>
+<h1>Trang chủ</h1>
