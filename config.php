@@ -1,7 +1,10 @@
 <?php
 const _HIEU = true; //Kiểm tra việc truy cập có hợp lệ hay không
-const _MODULES = 'dashboard';
+
+
+const _MODULES = 'dashboard'; // 'dashboard/index' lấy ra để khi vào trang web, vào trang nào đầu tiên
 const _ACTION = 'index';
+
 //Khai báo database
 const _HOST = 'localhost';
 const _DB = 'manager_course';
