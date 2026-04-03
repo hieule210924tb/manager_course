@@ -28,11 +28,13 @@ if (!empty($path)) {
     require_once './modules/errors/500.php';
 };
 $data = [
-    'name' => 'Hiếu Hải 3',
-    'slug' => 'Hieu-Hai-3',
+    'fullname' => 'Hiếu Lê',
+    'email' => 'hieu@gmail.com',
+    'phone' => '0123456789',
 ];
 $condition = 'id = 2';
-$rel = update('course_category', $data, $condition);
+insert('users', $data);
+$rel = lastId();
 echo '<pre>';
-print_r($rel);
+echo ($rel);
 echo '</pre>';

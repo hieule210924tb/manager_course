@@ -11,6 +11,16 @@ function getAll($sql)
     $result = $stm->fetchAll(PDO::FETCH_ASSOC); //fetchAll trả về tất cả dữ liệu từ db
     return $result;
 }
+// Đếm số lượng dòng
+function getRows($sql)
+{
+    global $conn;
+    $stm = $conn->prepare($sql); //prepare : đọc dữ liệu từ câu lệnh sql
+    $stm->execute();
+    $result = $stm->rowCount(); //rowCount trả về số lượng dòng
+    return $result;
+}
+
 function getOne($sql)
 {
     global $conn;
@@ -50,4 +60,24 @@ function update($table, $data, $condition = '')
     }
     $tmp = $conn->prepare($sql);
     $tmp->execute($data);
+}
+
+//Xóa dữ liệu
+function delete($table, $condition = '')
+{
+    global $conn;
+    if (!empty($condition)) {
+        $sql = "DELETE  from $table where $condition";
+    } else {
+        $sql = "DELETE from $table";
+    }
+    $stm = $conn->prepare($sql);
+    $stm->execute();
+}
+
+// Hàm lấy dòng dữ liệu mới insert
+function lastId()
+{
+    global $conn;
+    return $conn->lastInsertId();
 }
