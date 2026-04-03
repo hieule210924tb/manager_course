@@ -75,7 +75,7 @@ function delete($table, $condition = '')
     $stm->execute();
 }
 
-// Hàm lấy dòng dữ liệu mới insert
+// Hàm lấy ID mới insert
 function lastId()
 {
     global $conn;

@@ -7,6 +7,7 @@ ob_start(); //tránh th bị lỗi
 require_once 'config.php';
 require_once './includes/connect.php';
 require_once './includes/database.php';
+require_once './includes/session.php';
 
 $module = _MODULES;
 $action = _ACTION;
@@ -27,14 +28,8 @@ if (!empty($path)) {
 } else {
     require_once './modules/errors/500.php';
 };
-$data = [
-    'fullname' => 'Hiếu Lê',
-    'email' => 'hieu@gmail.com',
-    'phone' => '0123456789',
-];
-$condition = 'id = 2';
-insert('users', $data);
-$rel = lastId();
-echo '<pre>';
-echo ($rel);
-echo '</pre>';
+//  setSession('hung', 'Khoa hoc php');
+// removeSession('hung');
+$rel = getSessionFlash('hai');
+echo $rel;
+print_r($_SESSION);
