@@ -28,10 +28,11 @@ if (!empty($path)) {
     require_once './modules/errors/500.php';
 };
 $data = [
-    'name' => 'Hùng Ngọc',
-    'slug' => 'Hung-Ngoc',
+    'name' => 'Hiếu Hải 3',
+    'slug' => 'Hieu-Hai-3',
 ];
-$rel = insert('course_category', $data);
+$condition = 'id = 2';
+$rel = update('course_category', $data, $condition);
 echo '<pre>';
 print_r($rel);
 echo '</pre>';

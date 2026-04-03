@@ -32,3 +32,22 @@ function insert($table, $data)
     // Data cần insert
     $rel = $stm->execute($data);
 }
+
+//Update dữ liệu
+function update($table, $data, $condition = '')
+{
+    global $conn;
+    $update = '';
+    foreach ($data as $key => $value) {
+        $update .= $key . '=:' . $key . ',';
+    };
+    $update = trim($update, ','); // hàm trim giúp bỏ dấu phẩy ở cuối 
+
+    if (!empty($condition)) {
+        $sql = "update $table set $update where $condition";
+    } else {
+        $sql = "update $table set $update";
+    }
+    $tmp = $conn->prepare($sql);
+    $tmp->execute($data);
+}
