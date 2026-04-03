@@ -8,6 +8,8 @@ require_once 'config.php';
 require_once './includes/connect.php';
 require_once './includes/database.php';
 require_once './includes/session.php';
+require_once './templates/layout/index.php';
+
 
 $module = _MODULES;
 $action = _ACTION;
@@ -30,6 +32,6 @@ if (!empty($path)) {
 };
 //  setSession('hung', 'Khoa hoc php');
 // removeSession('hung');
-$rel = getSessionFlash('hai');
-echo $rel;
-print_r($_SESSION);
+// $rel = getSessionFlash('hai');
+// echo $rel;
+// print_r($_SESSION);
