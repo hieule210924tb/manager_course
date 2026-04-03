@@ -19,3 +19,16 @@ function getOne($sql)
     $result = $stm->fetch(PDO::FETCH_ASSOC); //fetch trả về 1 dòng dữ liệu từ db
     return $result;
 }
+
+//Insert dữ liệu
+function insert($table, $data)
+{
+    global $conn;
+    $keys = array_keys($data); //array_keys lấy ra các key trong mảng $data
+    $cot = implode(',', $keys); // implode chuyển mảng thành chuỗi
+    $place = ":" . implode(',:', $keys);
+    $sql = "INSERT INTO $table($cot) values($place)";
+    $stm = $conn->prepare($sql);
+    // Data cần insert
+    $rel = $stm->execute($data);
+}

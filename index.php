@@ -26,8 +26,12 @@ if (!empty($path)) {
     }
 } else {
     require_once './modules/errors/500.php';
-}
-$rel = getAll("SELECT * FROM course where id =2");
+};
+$data = [
+    'name' => 'Hùng Ngọc',
+    'slug' => 'Hung-Ngoc',
+];
+$rel = insert('course_category', $data);
 echo '<pre>';
 print_r($rel);
 echo '</pre>';
