@@ -3,7 +3,10 @@
 if (!defined('_HIEU')) {
     die('Truy cập không hợp lệ');
 }
-require_once './templates/layout/header-auth.php';
+$data = [
+    'title' => 'Quên mật khẩu'
+];
+layout('header-auth', $data);
 ?>
 <section class="vh-100">
     <div class="container-fluid h-custom">
@@ -33,4 +36,4 @@ require_once './templates/layout/header-auth.php';
         </div>
     </div>
 </section>
-<?php require_once './templates/layout/footer.php'; ?>
+<?php layout('footer'); ?>

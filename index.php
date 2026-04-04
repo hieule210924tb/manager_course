@@ -8,8 +8,10 @@ require_once 'config.php';
 require_once './includes/connect.php';
 require_once './includes/database.php';
 require_once './includes/session.php';
-require_once './templates/layout/index.php';
+require_once './includes/functions.php';
 
+
+require_once './templates/layout/index.php';
 
 $module = _MODULES;
 $action = _ACTION;
