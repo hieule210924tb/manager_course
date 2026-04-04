@@ -46,3 +46,22 @@ Groups:
 -name varchar(100)
 -created_at : datetime
 -updated_at: datetime
+
+// Thực hành xây dựng chức năng quản lý người dùng:
+
+<!-- <div>Phần 1: Xác thực truy cập</div>
+-Đăng kí <br>
+-Đăng nhập <br>
+-Đăng xuất <br>
+-Quên mật khẩu <br>
+-Kích hoạt tài khoản <br>
+
+<div>Phần 2 : Quản lý người dùng</div>
+-Kiểm tra người dùng đăng nhập <br>
+-Thêm người dùng <br>
+-Xóa sửa người dùng <br>
+-Hiển thị số user <br>
+-Phân trang <br>
+-Tìm kiếm, lọc dữ liệu <br> -->
+
+//Thiết kế database
