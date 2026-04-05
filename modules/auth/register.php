@@ -7,63 +7,76 @@ $data = [
     'title' => 'Đăng kí tài khoản'
 ];
 layout('header-auth', $data);
+$msg = '';
+$msg_type = '';
+$errors = [];
+$errorArr = [];
 if (isPost()) {
     $filter = filterData();
-    $error = [];
+    // $errors = [];
 
     //validate fullname
     if (empty(trim($filter['fullname']))) {
-        $error['fullname']['require'] = 'Họ tên bắt buộc phải nhập';
+        $errors['fullname']['require'] = 'Họ tên bắt buộc phải nhập';
     } else {
         if (strlen(trim($filter['fullname'])) < 5) {
-            $error['fullname']['length'] = 'Họ tên phải lớn hơn 5 kí tự';
+            $errors['fullname']['length'] = 'Họ tên phải lớn hơn 5 kí tự';
         }
     }
     //validate email
     if (empty(trim($filter['email']))) {
-        $error['email']['required'] = 'Email bắt buộc phải nhập';
+        $errors['email']['required'] = 'Email bắt buộc phải nhập';
     } else {
         // Đúng định dạng không, đã tồn tại trong database chưa
         if (!validateEmail(trim($filter['email']))) {
-            $error['email']['isEmail'] = 'Email không đúng định dạng';
+            $errors['email']['isEmail'] = 'Email không đúng định dạng';
         } else {
             $email = $filter['email'];
             $checkEmail = getRows("SELECT * from users where email ='$email'");
             if ($checkEmail > 0) {
-                $error['email']['check'] = 'Email đã tồn tại!';
+                $errors['email']['check'] = 'Email đã tồn tại!';
             }
         }
     }
     // validate sđt
     if (empty($filter['phone'])) {
-        $error['phone']['require'] = 'Số điện thoại bắt buộc phải nhập';
+        $errors['phone']['require'] = 'Số điện thoại bắt buộc phải nhập';
     } else {
         if (!isPhone($filter['phone'])) {
-            $error['phone']['isPhone'] = 'Số điện thoại không hợp lệ';
+            $errors['phone']['isPhone'] = 'Số điện thoại không hợp lệ';
         }
     }
 
     // validate password > 6 kí tự
     if (empty(trim($filter['password']))) {
-        $error['password']['require'] = 'Mật khẩu bắt buộc phải nhập';
+        $errors['password']['require'] = 'Mật khẩu bắt buộc phải nhập';
     } else {
         if (strlen(trim($filter['password'])) < 6) {
-            $error['password']['length'] = 'Mật khẩu phải lớn hơn 6 kí tự';
+            $errors['password']['length'] = 'Mật khẩu phải lớn hơn 6 kí tự';
         }
     }
 
     // validate confirm password 
     if (empty(trim($filter['confirm_password']))) {
-        $error['confirm_password']['require'] = 'Vui lòng nhập lại mật khẩu';
+        $errors['confirm_password']['require'] = 'Vui lòng nhập lại mật khẩu';
     } else {
         if (trim($filter['confirm_password'] != trim($filter['password']))) {
-            $error['confirm_password']['like'] = 'Mật khẩu nhập lại không khớp';
+            $errors['confirm_password']['like'] = 'Mật khẩu nhập lại không khớp';
         }
     }
 
-    echo '<pre>';
-    print_r($error);
-    echo '</pre>';
+
+    if (empty($errors)) {
+        $msg = 'Đăng kí thành công';
+        $msg_type = 'success';
+    } else {
+        $msg = 'Dữ liệu không hợp lệ, hãy kiểm tra lại!!!';
+        $msg_type = 'danger';
+        setSessionFlash('errors', $errors); // Lưu nó vào session 
+    }
+
+    $errorArr = getSessionFlash('errors'); // để lấy dữ liệu error ra
+
 }
 ?>
 <section class="vh-100">
@@ -74,6 +87,7 @@ if (isPost()) {
                     alt="Sample image">
             </div>
             <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+                <?php if (!empty($msg)) getMsg($msg, $msg_type); ?>
                 <form method='POST' action="" enctype='multipart/form-data'>
                     <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
                         <h2 class="fw-normal mb-5 me-3">Đăng kí tài khoản</h2>
@@ -82,26 +96,31 @@ if (isPost()) {
                     <!-- Họ tên input -->
                     <div data-mdb-input-init class="form-outline mb-4">
                         <input type="text" name="fullname" class="form-control form-control-lg" placeholder="Họ tên" />
+                        <?php displayErrors($errorArr, 'fullname') ?>
                     </div>
                     <!-- Email input -->
                     <div data-mdb-input-init class="form-outline mb-4">
                         <input type="text" name="email" class="form-control form-control-lg"
                             placeholder="Địa chỉ email" />
+                        <?php displayErrors($errorArr, 'email') ?>
                     </div>
                     <!-- Phone input -->
                     <div data-mdb-input-init class="form-outline mb-4">
                         <input type="text" name="phone" class="form-control form-control-lg"
                             placeholder="Số điện thoại" />
+                        <?php displayErrors($errorArr, 'phone') ?>
                     </div>
                     <!-- Password input -->
                     <div data-mdb-input-init class="form-outline mb-3">
                         <input type="password" name="password" id="form3Example4" class="form-control form-control-lg"
                             placeholder="Nhập mật khẩu" />
+                        <?php displayErrors($errorArr, 'password') ?>
                     </div>
                     <!-- Password again -->
                     <div data-mdb-input-init class="form-outline mb-3">
                         <input type="password" name="confirm_password" id="form3Example4"
                             class="form-control form-control-lg" placeholder="Nhập lại mật khẩu" />
+                        <?php displayErrors($errorArr, 'confirm_password') ?>
                     </div>
                     <div class="text-center text-lg-start mt-4 pt-2">
                         <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg"

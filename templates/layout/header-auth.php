@@ -43,7 +43,7 @@ if (!defined('_HIEU')) {
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="<?php echo _HOST_URL_TEMPLATES ?>/assets/css/adminlte.css" />
     <!--end::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="<?php echo _HOST_URL_TEMPLATES ?>/assets/css/login.css">
+    <link rel="stylesheet" href="<?php echo _HOST_URL_TEMPLATES ?>/assets/css/login.css?ver<?php rand() ?>">
 </head>
 
 <!-- <body>

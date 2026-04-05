@@ -173,3 +173,19 @@ function isPhone($phone)
 
     return false;
 }
+
+
+// Thông báo lỗi
+function getMsg($msg, $type = 'success')
+{
+    echo  '<div class="annouce-message alert alert-' . $type . '">';
+    echo $msg;
+    echo '</div>';
+}
+// hiển thị lỗi
+function displayErrors($errorArr, $fieldName)
+{
+    echo '<div class="error">';
+    echo !empty($errorArr[$fieldName]) ? reset($errorArr[$fieldName]) : "";
+    echo '</div>';
+}
