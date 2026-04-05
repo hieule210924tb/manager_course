@@ -65,3 +65,13 @@ Groups:
 -Tìm kiếm, lọc dữ liệu <br> -->
 
 //Thiết kế database
+
+-PASSWORD_HASH() <br>
+-PASSWORD_VERIFY() <br>
+
+-Code các tính năng đăng kí tài khoản
+
+- Kiểm tra và xử lý dữ liệu đầu vào ở form đăng kí (dữ liệu sạch)
+- Insert vào bảng user trong database
+- Gửi email cho người dùng (email chứa đường link kích hoạt tài khoản )
+- Người dùng click vào link kích hoạt -> Xử lý active cho tài khoản

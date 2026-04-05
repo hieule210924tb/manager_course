@@ -153,3 +153,23 @@ function validateInt($number)
     }
     return $checkNumber;
 }
+
+//Xây dựng hàm validate phone
+
+function isPhone($phone)
+{
+    $phoneFirst = false;
+    if ($phone[0] == '0') {
+        $phoneFirst = true;
+        $phone = substr($phone, 1);
+    }
+    $checkPhone = false;
+    if (validateInt($phone)) {
+        $checkPhone = true;
+    }
+    if ($phoneFirst && $checkPhone) {
+        return true;
+    }
+
+    return false;
+}

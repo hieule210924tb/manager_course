@@ -7,14 +7,64 @@ $data = [
     'title' => 'Đăng kí tài khoản'
 ];
 layout('header-auth', $data);
-if (!empty($_POST)) {
-    $filterArray = filterData('POST');
-    echo '<pre>';
-    print_r($filterArray);
-    echo '</pre>';
-    die();
-}
+if (isPost()) {
+    $filter = filterData();
+    $error = [];
 
+    //validate fullname
+    if (empty(trim($filter['fullname']))) {
+        $error['fullname']['require'] = 'Họ tên bắt buộc phải nhập';
+    } else {
+        if (strlen(trim($filter['fullname'])) < 5) {
+            $error['fullname']['length'] = 'Họ tên phải lớn hơn 5 kí tự';
+        }
+    }
+    //validate email
+    if (empty(trim($filter['email']))) {
+        $error['email']['required'] = 'Email bắt buộc phải nhập';
+    } else {
+        // Đúng định dạng không, đã tồn tại trong database chưa
+        if (!validateEmail(trim($filter['email']))) {
+            $error['email']['isEmail'] = 'Email không đúng định dạng';
+        } else {
+            $email = $filter['email'];
+            $checkEmail = getRows("SELECT * from users where email ='$email'");
+            if ($checkEmail > 0) {
+                $error['email']['check'] = 'Email đã tồn tại!';
+            }
+        }
+    }
+    // validate sđt
+    if (empty($filter['phone'])) {
+        $error['phone']['require'] = 'Số điện thoại bắt buộc phải nhập';
+    } else {
+        if (!isPhone($filter['phone'])) {
+            $error['phone']['isPhone'] = 'Số điện thoại không hợp lệ';
+        }
+    }
+
+    // validate password > 6 kí tự
+    if (empty(trim($filter['password']))) {
+        $error['password']['require'] = 'Mật khẩu bắt buộc phải nhập';
+    } else {
+        if (strlen(trim($filter['password'])) < 6) {
+            $error['password']['length'] = 'Mật khẩu phải lớn hơn 6 kí tự';
+        }
+    }
+
+    // validate confirm password 
+    if (empty(trim($filter['confirm_password']))) {
+        $error['confirm_password']['require'] = 'Vui lòng nhập lại mật khẩu';
+    } else {
+        if (trim($filter['confirm_password'] != trim($filter['password']))) {
+            $error['confirm_password']['like'] = 'Mật khẩu nhập lại không khớp';
+        }
+    }
+
+    echo '<pre>';
+    print_r($error);
+    echo '</pre>';
+}
 ?>
 <section class="vh-100">
     <div class="container-fluid h-custom">
@@ -35,7 +85,7 @@ if (!empty($_POST)) {
                     </div>
                     <!-- Email input -->
                     <div data-mdb-input-init class="form-outline mb-4">
-                        <input type="email" name="email" class="form-control form-control-lg"
+                        <input type="text" name="email" class="form-control form-control-lg"
                             placeholder="Địa chỉ email" />
                     </div>
                     <!-- Phone input -->
@@ -50,7 +100,7 @@ if (!empty($_POST)) {
                     </div>
                     <!-- Password again -->
                     <div data-mdb-input-init class="form-outline mb-3">
-                        <input type="password" name="confirm_pass" id="form3Example4"
+                        <input type="password" name="confirm_password" id="form3Example4"
                             class="form-control form-control-lg" placeholder="Nhập lại mật khẩu" />
                     </div>
                     <div class="text-center text-lg-start mt-4 pt-2">
