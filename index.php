@@ -19,7 +19,7 @@ require_once './includes/functions.php';
 
 require_once './templates/layout/index.php';
 
-sendMail('hieule210924@gmail.com', 'Test mail', 'Nội dung email đang test 2');
+// sendMail('hieule210924@gmail.com', 'Test mail', 'Nội dung email đang test 2');
 
 $module = _MODULES;
 $action = _ACTION;

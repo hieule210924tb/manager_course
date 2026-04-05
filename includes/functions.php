@@ -57,3 +57,79 @@ function sendMail($emailTo, $subject, $content)
         echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
     }
 }
+
+//Kiểm tra phương thức post 
+function isPost()
+{
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        return true;
+    }
+    return false;
+}
+//Kiểm tra phương thức get 
+function isGet()
+{
+    if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+        return true;
+    }
+    return false;
+}
+
+// Lọc dữ liệu
+function filterData($method = '')
+{
+    $filterArray = [];
+    if (empty($method)) {
+        if (isGet()) {
+            if (!empty($_GET)) {
+                foreach ($_GET as $key => $value) {
+                    $key = strip_tags($key);
+                    if (is_array($value)) { // filter ko phải dạng mảng
+                        //FILTER_SANITIZE_SPECIAL_CHARS Loại bỏ kí tự đặc biệt
+                        $filterArray[$key] = filter_var($_GET[$key], FILTER_SANITIZE_SPECIAL_CHARS, FILTER_REQUIRE_ARRAY);
+                    } else {
+                        $filterArray[$key] = filter_var($_GET[$key], FILTER_SANITIZE_SPECIAL_CHARS); // filter dạng mảng
+                    }
+                }
+            }
+        }
+        if (isPost()) {
+            if (!empty($_POST)) {
+                foreach ($_POST as $key => $value) {
+                    $key = strip_tags($key);
+                    if (is_array($value)) {
+                        $filterArray[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS, FILTER_REQUIRE_ARRAY);
+                    } else {
+                        $filterArray[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS); // filter dạng mảng
+                    }
+                }
+            }
+        }
+    } else {
+        if ($method == 'GET') {
+            if (!empty($_GET)) {
+                foreach ($_GET as $key => $value) {
+                    $key = strip_tags($key);
+                    if (is_array($value)) { // filter ko phải dạng mảng
+                        //FILTER_SANITIZE_SPECIAL_CHARS Loại bỏ kí tự đặc biệt
+                        $filterArray[$key] = filter_var($_GET[$key], FILTER_SANITIZE_SPECIAL_CHARS, FILTER_REQUIRE_ARRAY);
+                    } else {
+                        $filterArray[$key] = filter_var($_GET[$key], FILTER_SANITIZE_SPECIAL_CHARS); // filter dạng mảng
+                    }
+                }
+            }
+        } else if ($method == 'POST') {
+            if (!empty($_POST)) {
+                foreach ($_POST as $key => $value) {
+                    $key = strip_tags($key);
+                    if (is_array($value)) {
+                        $filterArray[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS, FILTER_REQUIRE_ARRAY);
+                    } else {
+                        $filterArray[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS); // filter dạng mảng
+                    }
+                }
+            }
+        }
+    }
+    return $filterArray;
+}
