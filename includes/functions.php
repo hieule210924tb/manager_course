@@ -83,9 +83,10 @@ function filterData($method = '')
         if (isGet()) {
             if (!empty($_GET)) {
                 foreach ($_GET as $key => $value) {
-                    $key = strip_tags($key);
+                    $key = strip_tags($key); //strip_tags : loại bỏ các thẻ HTML và PHP tránh tránh nhập liệu chứa mã HTML/PHP không mong muốn
                     if (is_array($value)) { // filter ko phải dạng mảng
                         //FILTER_SANITIZE_SPECIAL_CHARS Loại bỏ kí tự đặc biệt
+                        //FILTER_REQUIRE_ARRAY: để chỉ định rằng giá trị đầu vào phải là một mảng
                         $filterArray[$key] = filter_var($_GET[$key], FILTER_SANITIZE_SPECIAL_CHARS, FILTER_REQUIRE_ARRAY);
                     } else {
                         $filterArray[$key] = filter_var($_GET[$key], FILTER_SANITIZE_SPECIAL_CHARS); // filter dạng mảng
@@ -132,4 +133,23 @@ function filterData($method = '')
         }
     }
     return $filterArray;
+}
+
+// Xây dựng hàm validate email
+function validateEmail($email)
+{
+    if (!empty($email)) {
+        $checkEmail = filter_var($email, FILTER_VALIDATE_EMAIL);
+    }
+    return $checkEmail;
+}
+
+//Xây dựng hàm validate int
+
+function validateInt($number)
+{
+    if (!empty($number)) {
+        $checkNumber = filter_var($number, FILTER_VALIDATE_INT);
+    }
+    return $checkNumber;
 }
