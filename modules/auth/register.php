@@ -11,6 +11,7 @@ $msg = '';
 $msg_type = '';
 $errors = [];
 $errorArr = [];
+$oldData = [];
 if (isPost()) {
     $filter = filterData();
     // $errors = [];
@@ -72,11 +73,12 @@ if (isPost()) {
     } else {
         $msg = 'Dữ liệu không hợp lệ, hãy kiểm tra lại!!!';
         $msg_type = 'danger';
+        setSessionFlash('oldData', $filter);
         setSessionFlash('errors', $errors); // Lưu nó vào session 
     }
 
+    $oldData = getSessionFlash('oldData');
     $errorArr = getSessionFlash('errors'); // để lấy dữ liệu error ra
-
 }
 ?>
 <section class="vh-100">
@@ -91,23 +93,23 @@ if (isPost()) {
                 <form method='POST' action="" enctype='multipart/form-data'>
                     <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
                         <h2 class="fw-normal mb-5 me-3">Đăng kí tài khoản</h2>
-
                     </div>
                     <!-- Họ tên input -->
                     <div data-mdb-input-init class="form-outline mb-4">
-                        <input type="text" name="fullname" class="form-control form-control-lg" placeholder="Họ tên" />
+                        <input type="text" name="fullname" value="<?php oldData($oldData, 'fullname') ?>"
+                            class="form-control form-control-lg" placeholder="Họ tên" />
                         <?php displayErrors($errorArr, 'fullname') ?>
                     </div>
                     <!-- Email input -->
                     <div data-mdb-input-init class="form-outline mb-4">
-                        <input type="text" name="email" class="form-control form-control-lg"
-                            placeholder="Địa chỉ email" />
+                        <input type="text" name="email" value="<?php oldData($oldData, 'email') ?>"
+                            class="form-control form-control-lg" placeholder="Địa chỉ email" />
                         <?php displayErrors($errorArr, 'email') ?>
                     </div>
                     <!-- Phone input -->
                     <div data-mdb-input-init class="form-outline mb-4">
-                        <input type="text" name="phone" class="form-control form-control-lg"
-                            placeholder="Số điện thoại" />
+                        <input type="text" name="phone" value="<?php oldData($oldData, 'phone') ?>"
+                            class="form-control form-control-lg" placeholder="Số điện thoại" />
                         <?php displayErrors($errorArr, 'phone') ?>
                     </div>
                     <!-- Password input -->

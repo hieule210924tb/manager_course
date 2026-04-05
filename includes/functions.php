@@ -189,3 +189,9 @@ function displayErrors($errorArr, $fieldName)
     echo !empty($errorArr[$fieldName]) ? reset($errorArr[$fieldName]) : "";
     echo '</div>';
 }
+
+// hàm lưu lại dữ liệu đúng trong form đăng kí
+function oldData($oldData, $fieldName)
+{
+    echo !empty($oldData[$fieldName]) ? $oldData[$fieldName] : "";
+}
