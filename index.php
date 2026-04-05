@@ -8,10 +8,18 @@ require_once 'config.php';
 require_once './includes/connect.php';
 require_once './includes/database.php';
 require_once './includes/session.php';
+
+//Email
+require './includes/mailer/Exception.php';
+require './includes/mailer/PHPMailer.php';
+require './includes/mailer/SMTP.php';
+
 require_once './includes/functions.php';
 
 
 require_once './templates/layout/index.php';
+
+sendMail('hieule210924@gmail.com', 'Test mail', 'Nội dung email đang test 2');
 
 $module = _MODULES;
 $action = _ACTION;
