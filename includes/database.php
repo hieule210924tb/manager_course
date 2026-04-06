@@ -41,6 +41,7 @@ function insert($table, $data)
     $stm = $conn->prepare($sql);
     // Data cần insert
     $rel = $stm->execute($data);
+    return $rel;
 }
 
 //Update dữ liệu
@@ -59,7 +60,8 @@ function update($table, $data, $condition = '')
         $sql = "update $table set $update";
     }
     $tmp = $conn->prepare($sql);
-    $tmp->execute($data);
+    $rel = $tmp->execute($data);
+    return $rel;
 }
 
 //Xóa dữ liệu
@@ -72,7 +74,8 @@ function delete($table, $condition = '')
         $sql = "DELETE from $table";
     }
     $stm = $conn->prepare($sql);
-    $stm->execute();
+    $rel = $stm->execute();
+    return $rel;
 }
 
 // Hàm lấy ID mới insert

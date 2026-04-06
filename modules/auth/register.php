@@ -68,15 +68,43 @@ if (isPost()) {
 
 
     if (empty($errors)) {
-        $msg = 'Đăng kí thành công';
-        $msg_type = 'success';
+        $activeToken = sha1(uniqid() . time());
+        // table, data
+        $data = [
+            'fullname' => $filter['fullname'],
+            // 'address' => $filter['address'],
+            'phone' => $filter['phone'],
+            'password' => password_hash($filter['password'], PASSWORD_DEFAULT),
+            'email' => $filter['email'],
+            'active_token' => $activeToken,
+            'group_id' => 1,
+            'created_at' => date('Y:m:d H:i:s'),
+        ];
+        $insertStatus = insert('users', $data);
+        if ($insertStatus) {
+            //Gửi email
+            $emailTo = $filter['email'];
+            $subject = 'Kích hoạt tài khoản hệ thống!';
+            $content = 'Chúc mừng bạn đã đăng kí thành công tài khoản </=>';
+            $content .= 'Để kích hoạt tài khoản, bạn hãy click vào đường link bên dưới </br>';
+            $content .= _HOST_URL . '/?module=auth&action=active&token=' . $activeToken  . '</br>';
+            $content .= 'Cảm ơn bạn';
+            sendMail($emailTo, $subject, $content);
+            setSessionFlash('msg', 'Đăng kí thành công, vui lòng kích hoạt tài khoản.');
+            setSessionFlash('msg_type', 'success');
+        } else {
+            setSessionFlash('msg', 'Đăng kí không thành công, vui lòng thử lại sau.');
+            setSessionFlash('msg_type', 'danger');
+        }
     } else {
-        $msg = 'Dữ liệu không hợp lệ, hãy kiểm tra lại!!!';
-        $msg_type = 'danger';
-        setSessionFlash('oldData', $filter);
+        setSessionFlash('msg', 'Vui lòng kiểm tra lại dữ liệu nhập vào.');
+        setSessionFlash('msg_type', 'danger');
+        setSessionFlash('oldData', $filter); // lưu dữ liệu hợp lệ, để khi users nhập đúng trường nào thì f5 lại không 
+        //mất dữ liệu đã nhập đúng
         setSessionFlash('errors', $errors); // Lưu nó vào session 
     }
-
+    $msg = getSessionFlash('msg');
+    $msg_type = getSessionFlash('msg_type');
     $oldData = getSessionFlash('oldData');
     $errorArr = getSessionFlash('errors'); // để lấy dữ liệu error ra
 }
