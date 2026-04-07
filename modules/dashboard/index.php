@@ -2,8 +2,12 @@
 if (!defined('_HIEU')) {
     die('Truy cập không hợp lệ');
 };
-require_once './templates/layout/header.php';
-require_once './templates/layout/sidebar.php'
+
+$data = [
+    'title' => 'Dashboard'
+];
+layout('header', $data);
+layout('sidebar')
 ?>
 <!--begin::App Main-->
 <main class="app-main">
@@ -113,4 +117,4 @@ require_once './templates/layout/sidebar.php'
 </main>
 <!--end::App Main-->
 
-<?php require_once './templates/layout/footer.php' ?>
+<?php layout('footer') ?>
