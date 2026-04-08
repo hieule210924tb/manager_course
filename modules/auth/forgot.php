@@ -9,6 +9,7 @@ $data = [
 layout('header-auth', $data);
 if (isPost()) {
     $filter = filterData();
+    $errors = [];
     //validate email
     if (empty(trim($filter['email']))) {
         $errors['email']['required'] = 'Email bắt buộc phải nhập';
