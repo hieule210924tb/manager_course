@@ -44,6 +44,9 @@ if (isPost()) {
                 if ($checkStatus) {
                     //Tạo token và insert vào bảng token_login
                     $token = sha1(uniqid() . time());
+                    //gán token lên session
+                    setSessionFlash('token_login', $token);
+
                     $data = [
                         'token' => $token,
                         'created_at' => date('Y-m-d H:i:s'),
@@ -136,5 +139,11 @@ layout('footer');
 -Kiểm tra dữ liệu đầu vào
 -Check dữ liệu email, password
 -Dữ liệu khớp -> tokenlogin -> insert vào bảng  token_login ( để kiểm tra đăng nhập)
+
+-Kiểm tra đăng nhập
+  +Gán token_login lên session
+  +Trong header -> lấy token từ session về và so khớp với token trong bảng token_login
+  +Nếu khớp thì điều hướng đến trang đích (không khớp thì điều hướng về trang login)
+
 -Điều hướng đến trang dashboard
 -->

@@ -2,6 +2,9 @@
 if (!defined('_HIEU')) {
     die('Truy cập không hợp lệ');
 }
+if (!isLogin()) {
+    redirect('?module=auth&action=login');
+}
 ?>
 
 <!doctype html>
