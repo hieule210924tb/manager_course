@@ -85,10 +85,47 @@ if (isPost()) {
             //Gửi email
             $emailTo = $filter['email'];
             $subject = 'Kích hoạt tài khoản hệ thống!';
-            $content = 'Chúc mừng bạn đã đăng kí thành công tài khoản </=>';
-            $content .= 'Để kích hoạt tài khoản, bạn hãy click vào đường link bên dưới </br>';
-            $content .= _HOST_URL . '/?module=auth&action=active&token=' . $activeToken  . '</br>';
-            $content .= 'Cảm ơn bạn';
+
+            // Tạo đường dẫn kích hoạt
+            $active_link = _HOST_URL . '/?module=auth&action=active&token=' . $activeToken;
+
+            $content = '
+            <div style="font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; background-color: #f8f9fa; padding: 30px; color: #333;">
+            <div style="max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 1px solid #e1e1e1;">
+                
+                <div style="background-color: #28a745; padding: 25px; text-align: center;">
+                    <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Chào mừng bạn mới!</h1>
+                </div>
+
+                <div style="padding: 30px;">
+                    <p style="font-size: 18px; font-weight: bold; color: #28a745;">Chúc mừng Hiếu đã đăng ký thành công!</p>
+                    <p>Cảm ơn bạn đã tin tưởng và tham gia vào hệ thống của chúng tôi. Chỉ còn một bước nữa thôi để bắt đầu trải nghiệm.</p>
+                    <p>Vui lòng nhấn vào nút bên dưới để xác nhận và kích hoạt tài khoản của bạn:</p>
+                    
+                    <div style="text-align: center; margin: 35px 0;">
+                        <a href="' . $active_link . '" 
+                            style="background-color: #28a745; color: white; padding: 14px 30px; text-decoration: none; border-radius: 50px; font-weight: bold; display: inline-block; font-size: 16px; box-shadow: 0 4px 6px rgba(40, 167, 69, 0.3);">
+                            Kích hoạt tài khoản ngay
+                        </a>
+                    </div>
+
+                    <p style="font-size: 13px; color: #777; background-color: #f1f3f5; padding: 10px; border-radius: 5px;">
+                        Nếu nút trên không phản hồi, bạn hãy sao chép liên kết này vào trình duyệt: <br>
+                        <a href="' . $active_link . '" style="color: #28a745; word-break: break-all;">' . $active_link . '</a>
+                    </p>
+                    
+                    <hr style="border: none; border-top: 1px solid #eee; margin: 25px 0;">
+                    <p style="margin-bottom: 5px;">Trân trọng,</p>
+                    <p><strong>Đội ngũ vận hành hệ thống</strong></p>
+                </div>
+
+                <div style="background-color: #f8f9fa; padding: 20px; text-align: center; font-size: 12px; color: #999; border-top: 1px solid #eee;">
+                    Bạn nhận được email này vì đã đăng ký tài khoản tại ' . _HOST_URL . '. <br>
+                    © 2026 Hệ thống của chúng tôi. All rights reserved.
+                </div>
+            </div>
+            </div>
+            ';
             sendMail($emailTo, $subject, $content);
             setSessionFlash('msg', 'Đăng kí thành công, vui lòng kích hoạt tài khoản.');
             setSessionFlash('msg_type', 'success');
