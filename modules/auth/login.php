@@ -53,7 +53,7 @@ if (isPost()) {
                         //Tạo token và insert vào bảng token_login
                         $token = sha1(uniqid() . time());
                         //gán token lên session
-                        setSessionFlash('token_login', $token);
+                        setSession('token_login', $token);
 
                         $data = [
                             'token' => $token,
@@ -62,8 +62,6 @@ if (isPost()) {
                         ];
                         $insertToken = insert('token_login', $data);
                         if ($insertToken) {
-                            setSessionFlash('msg', 'Đăng nhập thành công.');
-                            setSessionFlash('msg_type', 'success');
                             redirect('/');
                         } else {
                             setSessionFlash('msg', 'Đăng nhập không thành công.');

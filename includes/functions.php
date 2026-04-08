@@ -214,7 +214,7 @@ function redirect($path, $pathFull = false)
 function isLogin()
 {
     $checkLogin = false;
-    $tokenLogin = getSessionFlash('token_login');
+    $tokenLogin = getSession('token_login');
     $checkToken = getOne("SELECT * from token_login where token ='$tokenLogin'");
     if (!empty($checkToken)) {
         $checkLogin = true;

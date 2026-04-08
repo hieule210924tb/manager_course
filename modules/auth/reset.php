@@ -12,7 +12,7 @@ $errors = [];
 $errorArr = [];
 
 if (!empty($filterGet['token'])) {
-    $tokenRest = $filterGet['token'];
+    $tokenRest = $filterGet['token']; // lấy token trên url
 }
 if (!empty($tokenRest)) {
     //Check token có chính xác hay không

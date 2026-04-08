@@ -100,7 +100,8 @@ if (!isLogin()) {
                             <!--end::Menu Footer-->
                             <!--begin::Menu Footer-->
                             <li class="user-footer">
-                                <a href="#" class="btn btn-outline-danger float-end w-100">Sign out</a>
+                                <a href=" ?module=auth&action=logout"
+                                    class="btn btn-outline-danger float-end w-100">Đăng xuất</a>
                             </li>
                             <!--end::Menu Footer-->
                         </ul>
