@@ -42,24 +42,33 @@ if (isPost()) {
             if (!empty($password)) {
                 $checkStatus = password_verify($password, $checkEmail['password']);
                 if ($checkStatus) {
-                    //Tạo token và insert vào bảng token_login
-                    $token = sha1(uniqid() . time());
-                    //gán token lên session
-                    setSessionFlash('token_login', $token);
-
-                    $data = [
-                        'token' => $token,
-                        'created_at' => date('Y-m-d H:i:s'),
-                        'user_id' => $checkEmail['id'],
-                    ];
-                    $insertToken = insert('token_login', $data);
-                    if ($insertToken) {
-                        setSessionFlash('msg', 'Đăng nhập thành công.');
-                        setSessionFlash('msg_type', 'success');
-                        redirect('/');
-                    } else {
-                        setSessionFlash('msg', 'Đăng nhập không thành công.');
+                    //Tài khoản chỉ login một nới
+                    $user_id = $checkEmail['id'];
+                    $checkAllready = getRows("SELECT * FROM token_login where user_id = '$user_id'");
+                    if ($checkAllready > 0) {
+                        setSessionFlash('msg', 'Tài khoản đang được đăng nhập ở 1 nơi khác, vui lòng thử lại sau.');
                         setSessionFlash('msg_type', 'danger');
+                        redirect('?module=auth&action=login');
+                    } else {
+                        //Tạo token và insert vào bảng token_login
+                        $token = sha1(uniqid() . time());
+                        //gán token lên session
+                        setSessionFlash('token_login', $token);
+
+                        $data = [
+                            'token' => $token,
+                            'created_at' => date('Y-m-d H:i:s'),
+                            'user_id' => $checkEmail['id'],
+                        ];
+                        $insertToken = insert('token_login', $data);
+                        if ($insertToken) {
+                            setSessionFlash('msg', 'Đăng nhập thành công.');
+                            setSessionFlash('msg_type', 'success');
+                            redirect('/');
+                        } else {
+                            setSessionFlash('msg', 'Đăng nhập không thành công.');
+                            setSessionFlash('msg_type', 'danger');
+                        }
                     }
                 } else {
                     setSessionFlash('msg', 'Vui lòng kiểm tra lại dữ liệu nhập vào.');
@@ -146,4 +155,6 @@ layout('footer');
   +Nếu khớp thì điều hướng đến trang đích (không khớp thì điều hướng về trang login)
 
 -Điều hướng đến trang dashboard
+
+-Chỉ cho phép đăng nhập tài khoản ở 1 nơi, tại một thời điểm
 -->
