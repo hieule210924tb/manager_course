@@ -33,8 +33,40 @@ if (isPost()) {
         }
     }
     if (empty($errors)) {
-        setSessionFlash('msg', 'Dữ liệu hợp lệ.');
-        setSessionFlash('msg_type', 'success');
+        //Kiểm tra dữ liệu 
+        $email = $filter['email'];
+        $password = $filter['password'];
+        //Kiểm tra email 
+        $checkEmail = getOne("SELECT * from users where email = '$email'");
+        if (!empty($checkEmail)) {
+            if (!empty($password)) {
+                $checkStatus = password_verify($password, $checkEmail['password']);
+                if ($checkStatus) {
+                    //Tạo token và insert vào bảng token_login
+                    $token = sha1(uniqid() . time());
+                    $data = [
+                        'token' => $token,
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'user_id' => $checkEmail['id'],
+                    ];
+                    $insertToken = insert('token_login', $data);
+                    if ($insertToken) {
+                        setSessionFlash('msg', 'Đăng nhập thành công.');
+                        setSessionFlash('msg_type', 'success');
+                        redirect('/');
+                    } else {
+                        setSessionFlash('msg', 'Đăng nhập không thành công.');
+                        setSessionFlash('msg_type', 'danger');
+                    }
+                } else {
+                    setSessionFlash('msg', 'Vui lòng kiểm tra lại dữ liệu nhập vào.');
+                    setSessionFlash('msg_type', 'danger');
+                }
+            }
+        } else {
+            setSessionFlash('msg', 'Chưa có tài khoản này, xin vui lòng đăng kí');
+            setSessionFlash('msg_type', 'danger');
+        }
     } else {
         setSessionFlash('msg', 'Vui lòng kiểm tra lại dữ liệu nhập vào.');
         setSessionFlash('msg_type', 'danger');

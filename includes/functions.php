@@ -195,3 +195,17 @@ function oldData($oldData, $fieldName)
 {
     echo !empty($oldData[$fieldName]) ? $oldData[$fieldName] : "";
 }
+// redirect('http://localhost/manager_course/?module=auth&action=login', true)
+// redirect('?module=auth&action=login')
+//Hàm chuyển hướng
+function redirect($path, $pathFull = false)
+{
+    if ($pathFull) {
+        header("Location: $path");
+        exit();
+    } else {
+        $url = _HOST_URL . $path;
+        header("Location: $url");
+        exit();
+    }
+}
