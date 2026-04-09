@@ -6,7 +6,15 @@ $data = [
     'title' => 'Danh sách tài khoản'
 ];
 layout('header', $data);
-layout('sidebar')
+layout('sidebar');
+
+
+$getDetailUser = getAll("SELECT a.id, a.fullname , a.email, a.created_at , b.name
+from users  a
+inner join `groups` b on a.group_id = b.id
+order by a.created_at desc
+");
+
 ?>
 <div class="container mt-4">
     <div class="container-fluid mt-3">
@@ -43,16 +51,24 @@ layout('sidebar')
                 </tr>
             </thead>
             <tbody>
+                <?php foreach ($getDetailUser as $key => $item) : ?>
                 <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                    <td>@mdo</td>
-                    <td><a href="" class="btn btn-primary">Phân quyền</a></td>
-                    <td><a href="" class="btn btn-warning"><i class="fa-solid fa-pencil"></i></a></td>
-                    <td><a href="" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a></td>
+                    <th scope="row"><?php echo $key + 1 ?></th>
+                    <td><?php echo $item['fullname'] ?></td>
+                    <td><?php echo $item['email'] ?></td>
+                    <td><?php echo $item['name'] ?></td>
+                    <td><?php echo $item['created_at'] ?></td>
+                    <td><a href="?module=users&action=permission&id=<?php echo $item['id'] ?>"
+                            class="btn btn-primary">Phân
+                            quyền</a></td>
+                    <td><a href="?module=users&action=edit&id=<?php echo $item['id'] ?>" class="btn btn-warning"><i
+                                class="fa-solid fa-pencil"></i></a></td>
+                    <td><a href="?module=users&action=delete&id=<?php echo $item['id'] ?>"
+                            onclick='return confirm("Bạn có chắc chắn muốn xóa <?php echo $item["fullname"] ?> không ?")'
+                            class="btn btn-danger"><i class="fa-solid fa-trash"></i></a></td>
                 </tr>
+                <?php endforeach; ?>
+
             </tbody>
         </table>
         <nav aria-label="Page navigation example">
