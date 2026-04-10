@@ -7,9 +7,11 @@ $data = [
 ];
 layout('header', $data);
 layout('sidebar');
-// keyword tìm kiếm ?module=users&action=list&group=1&keyword=hieu
-
-
+// keyword tìm kiếm ?module=users&action=list&group=1&keyword=hieu -Tìm kiếm
+//?module=users&action=list&group=1&keyword=hieu&page=10 -Phân trang
+//Phân trang : Trước ... 5,6,7 ... Sau
+// '1', 2,3 ... Sau -> Trước 1, '2',3,4 ... Sau
+// perPage, maxPage, offset -> Mỗi page là có bao nhiêu dữ liệu
 $filter = filterData();
 $chuoiWhere = '';
 $group = '0';
@@ -40,13 +42,25 @@ if (isGet()) {
         $chuoiWhere .= " group_id = $group ";
     }
 }
+// Xử lý phân trang
+// Lấy tổng dữ liệu có trong users
+$maxData = getRows("SELECT id from users");
+$perPage = 3; // cấu hình 1 trang mấy dòng
+$maxPage = ceil($maxData / $perPage);
+$offset = 0;
+if (isset($filter['page'])) {
+    $page = $filter['page'];
+}
+if (isset($page)) {
 
-
+    $offset = ($page - 1) * $page;
+}
 $getDetailUser = getAll("SELECT a.id, a.fullname , a.email, a.created_at , b.name
 from users  a
 inner join `groups` b 
 on a.group_id = b.id  $chuoiWhere
 order by a.created_at desc
+limit $offset, $perPage
 ");
 $getGroup = getAll("SELECT * from  `groups`");
 ?>
@@ -62,10 +76,10 @@ $getGroup = getAll("SELECT * from  `groups`");
                     <select class="form-select form-control" name='group' id=''>
                         <option value="">Nhóm người dùng</option>
                         <?php foreach ($getGroup as $item): ?>
-                            <option value="<?php echo $item['id'] ?>"
-                                <?php echo ($group == $item['id'] ? 'selected' : false) ?>>
-                                <?php echo $item['name'] ?>
-                            </option>
+                        <option value="<?php echo $item['id'] ?>"
+                            <?php echo ($group == $item['id'] ? 'selected' : false) ?>>
+                            <?php echo $item['name'] ?>
+                        </option>
                         <?php endforeach ?>
                     </select>
                 </div>
@@ -94,32 +108,34 @@ $getGroup = getAll("SELECT * from  `groups`");
             </thead>
             <tbody>
                 <?php foreach ($getDetailUser as $key => $item) : ?>
-                    <tr>
-                        <th scope="row"><?php echo $key + 1 ?></th>
-                        <td><?php echo $item['fullname'] ?></td>
-                        <td><?php echo $item['email'] ?></td>
-                        <td><?php echo $item['name'] ?></td>
-                        <td><?php echo $item['created_at'] ?></td>
-                        <td><a href="?module=users&action=permission&id=<?php echo $item['id'] ?>"
-                                class="btn btn-primary">Phân
-                                quyền</a></td>
-                        <td><a href="?module=users&action=edit&id=<?php echo $item['id'] ?>" class="btn btn-warning"><i
-                                    class="fa-solid fa-pencil"></i></a></td>
-                        <td><a href="?module=users&action=delete&id=<?php echo $item['id'] ?>"
-                                onclick='return confirm("Bạn có chắc chắn muốn xóa <?php echo $item["fullname"] ?> không ?")'
-                                class="btn btn-danger"><i class="fa-solid fa-trash"></i></a></td>
-                    </tr>
+                <tr>
+                    <th scope="row"><?php echo $key + 1 ?></th>
+                    <td><?php echo $item['fullname'] ?></td>
+                    <td><?php echo $item['email'] ?></td>
+                    <td><?php echo $item['name'] ?></td>
+                    <td><?php echo $item['created_at'] ?></td>
+                    <td><a href="?module=users&action=permission&id=<?php echo $item['id'] ?>"
+                            class="btn btn-primary">Phân
+                            quyền</a></td>
+                    <td><a href="?module=users&action=edit&id=<?php echo $item['id'] ?>" class="btn btn-warning"><i
+                                class="fa-solid fa-pencil"></i></a></td>
+                    <td><a href="?module=users&action=delete&id=<?php echo $item['id'] ?>"
+                            onclick='return confirm("Bạn có chắc chắn muốn xóa <?php echo $item["fullname"] ?> không ?")'
+                            class="btn btn-danger"><i class="fa-solid fa-trash"></i></a></td>
+                </tr>
                 <?php endforeach; ?>
 
             </tbody>
         </table>
         <nav aria-label="Page navigation example">
             <ul class="pagination d-flex justify-content-center">
-                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                <li class="page-item"><a class="page-link" href="#">Trước </a></li>
+                <li class="page-item"><a class="page-link" href="#">...</a></li>
+                <li class="page-item"><a class="page-link" href="#">4</a></li>
+                <li class="page-item"><a class="page-link" href="#">5</a></li>
+                <li class="page-item"><a class="page-link" href="#">6</a></li>
+                <li class="page-item"><a class="page-link" href="#">...</a></li>
+                <li class="page-item"><a class="page-link" href="#">Sau</a></li>
             </ul>
         </nav>
     </div>
