@@ -30,7 +30,7 @@ if (isGet()) {
         } else {
             $chuoiWhere .= ' AND ';
         }
-        $chuoiWhere .= "fullname LIKE '%$keyword %' or email LIKE '%$keyword%'";
+        $chuoiWhere .= "a.fullname LIKE '%$keyword %' or a.email LIKE '%$keyword%'";
     }
 
     if (!empty($group)) {
@@ -39,26 +39,25 @@ if (isGet()) {
         } else {
             $chuoiWhere .= ' AND ';
         }
-        $chuoiWhere .= " group_id = $group ";
+        $chuoiWhere .= " a.group_id = $group ";
     }
 }
 // Xử lý phân trang
 // Lấy tổng dữ liệu có trong users
 $maxData = getRows("SELECT id from users");
-$perPage = 5; // cấu hình 1 trang mấy dòng
+$perPage = 3; // cấu hình 1 trang mấy dòng
 $maxPage = ceil($maxData / $perPage);
 $offset = 0;
 $page = 1;
+//get page
 if (isset($filter['page'])) {
     $page = $filter['page'];
-}
-if (isset($page)) {
-
-    $offset = ($page - 1) * $page;
 }
 if ($page > $maxPage || $page < 1) {
     $page = 1;
 };
+$offset = ($page - 1) * $page;
+
 $getDetailUser = getAll("SELECT a.id, a.fullname , a.email, a.created_at , b.name
 from users  a
 inner join `groups` b 
@@ -67,6 +66,18 @@ order by a.created_at desc
 limit $offset, $perPage
 ");
 $getGroup = getAll("SELECT * from  `groups`");
+
+// Xử lý query
+if (!empty($_SERVER['QUERY_STRING'])) {
+    $queryString = $_SERVER['QUERY_STRING'];
+    $queryString = str_replace('&page=' . $page, '', $queryString); // Xóa bỏ page lặp lại trên URL
+}
+if ($group > 0 || !empty($keyword)) {
+    $maxData2 = getRows("SELECT id from users a $chuoiWhere");
+    $maxPage = ceil($maxData2 / $perPage);
+}
+
+
 ?>
 <div class="container mt-4">
     <div class="container-fluid mt-3">
@@ -136,7 +147,7 @@ $getGroup = getAll("SELECT * from  `groups`");
                 <!-- Xử lý nút trước -->
                 <?php if ($page > 1) : ?>
                 <li class='page-item'><a class='page-link'
-                        href="?module=users&action=list&page=<?php echo $page - 1 ?>">Trước </a></li>
+                        href="?<?php echo $queryString; ?>&page=<?php echo $page - 1 ?>">Trước </a></li>
                 <?php endif ?>
                 <!-- Tính vị trí bắt đầu -->
                 <?php $start = $page - 1;
@@ -147,7 +158,7 @@ $getGroup = getAll("SELECT * from  `groups`");
                 ?>
                 <?php if ($start > 1) : ?>
                 <li class='page-item'><a class='page-link'
-                        href="?module=users&action=list&page=<?php echo $page - 1 ?>">... </a></li>
+                        href="?<?php echo $queryString; ?>&page=<?php echo $page - 1 ?>">... </a></li>
                 <?php endif;
                 $end = $page + 1;
                 if ($end > $maxPage) {
@@ -158,17 +169,17 @@ $getGroup = getAll("SELECT * from  `groups`");
                 for ($i = $start; $i <= $end; $i++):
                 ?>
                 <li class="page-item <?php echo $page == $i ? 'active' : '' ?>"><a class="page-link"
-                        href="?module=users&action=list&page=<?php echo $i ?>"><?php echo $i ?></a></li>
+                        href="?<?php echo $queryString; ?>&page=<?php echo $i ?>"><?php echo $i ?></a></li>
                 <?php
                 endfor;
                 if ($end < $maxPage) : ?>
                 <li class='page-item'><a class='page-link'
-                        href="?module=users&action=list&page=<?php echo $page + 1 ?>">... </a></li>
+                        href="?<?php echo $queryString; ?>&page=<?php echo $page + 1 ?>">... </a></li>
                 <?php endif; ?>
                 <!-- Xử lý nút sau -->
                 <?php if ($page  < $maxPage) : ?>
                 <li class='page-item'><a class='page-link'
-                        href="?module=users&action=list&page=<?php echo $page + 1 ?>">Sau </a></li>
+                        href="?<?php echo $queryString; ?>&page=<?php echo $page + 1 ?>">Sau </a></li>
                 <?php endif ?>
             </ul>
         </nav>
