@@ -30,7 +30,7 @@ if (isGet()) {
         } else {
             $chuoiWhere .= ' AND ';
         }
-        $chuoiWhere .= "a.fullname LIKE '%$keyword %' or a.email LIKE '%$keyword%'";
+        $chuoiWhere .= "a.fullname LIKE '%$keyword%' or a.email LIKE '%$keyword%'";
     }
 
     if (!empty($group)) {
@@ -56,7 +56,7 @@ if (isset($filter['page'])) {
 if ($page > $maxPage || $page < 1) {
     $page = 1;
 };
-$offset = ($page - 1) * $page;
+$offset = ($page - 1) * $perPage;
 
 $getDetailUser = getAll("SELECT a.id, a.fullname , a.email, a.created_at , b.name
 from users  a
