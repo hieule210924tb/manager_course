@@ -43,7 +43,6 @@ function insert($table, $data)
     $rel = $stm->execute($data);
     return $rel;
 }
-
 //Update dữ liệu
 function update($table, $data, $condition = '')
 {

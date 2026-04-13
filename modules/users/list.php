@@ -77,12 +77,14 @@ if ($group > 0 || !empty($keyword)) {
     $maxPage = ceil($maxData2 / $perPage);
 }
 
-
+$msg = getSessionFlash('msg');
+$msg_type = getSessionFlash('msg_type');
 ?>
 <div class="container mt-4">
     <div class="container-fluid mt-3">
         <a href="?module=users&action=add" class="btn btn-success mb-3"><i class=" fa-solid fa-plus"></i>Thêm mới người
             dùng</a>
+        <?php if (!empty($msg)) getMsg($msg, $msg_type); ?>
         <form action="" class="mb-3" method="get">
             <input type="hidden" name="module" value="users">
             <input type="hidden" name="action" value="list">
@@ -91,10 +93,10 @@ if ($group > 0 || !empty($keyword)) {
                     <select class="form-select form-control" name='group' id=''>
                         <option value="">Nhóm người dùng</option>
                         <?php foreach ($getGroup as $item): ?>
-                        <option value="<?php echo $item['id'] ?>"
-                            <?php echo ($group == $item['id'] ? 'selected' : false) ?>>
-                            <?php echo $item['name'] ?>
-                        </option>
+                            <option value="<?php echo $item['id'] ?>"
+                                <?php echo ($group == $item['id'] ? 'selected' : false) ?>>
+                                <?php echo $item['name'] ?>
+                            </option>
                         <?php endforeach ?>
                     </select>
                 </div>
@@ -123,21 +125,21 @@ if ($group > 0 || !empty($keyword)) {
             </thead>
             <tbody>
                 <?php foreach ($getDetailUser as $key => $item) : ?>
-                <tr>
-                    <th scope="row"><?php echo $key + 1 ?></th>
-                    <td><?php echo $item['fullname'] ?></td>
-                    <td><?php echo $item['email'] ?></td>
-                    <td><?php echo $item['name'] ?></td>
-                    <td><?php echo $item['created_at'] ?></td>
-                    <td><a href="?module=users&action=permission&id=<?php echo $item['id'] ?>"
-                            class="btn btn-primary">Phân
-                            quyền</a></td>
-                    <td><a href="?module=users&action=edit&id=<?php echo $item['id'] ?>" class="btn btn-warning"><i
-                                class="fa-solid fa-pencil"></i></a></td>
-                    <td><a href="?module=users&action=delete&id=<?php echo $item['id'] ?>"
-                            onclick='return confirm("Bạn có chắc chắn muốn xóa <?php echo $item["fullname"] ?> không ?")'
-                            class="btn btn-danger"><i class="fa-solid fa-trash"></i></a></td>
-                </tr>
+                    <tr>
+                        <th scope="row"><?php echo $key + 1 ?></th>
+                        <td><?php echo $item['fullname'] ?></td>
+                        <td><?php echo $item['email'] ?></td>
+                        <td><?php echo $item['name'] ?></td>
+                        <td><?php echo $item['created_at'] ?></td>
+                        <td><a href="?module=users&action=permission&id=<?php echo $item['id'] ?>"
+                                class="btn btn-primary">Phân
+                                quyền</a></td>
+                        <td><a href="?module=users&action=edit&id=<?php echo $item['id'] ?>" class="btn btn-warning"><i
+                                    class="fa-solid fa-pencil"></i></a></td>
+                        <td><a href="?module=users&action=delete&id=<?php echo $item['id'] ?>"
+                                onclick='return confirm("Bạn có chắc chắn muốn xóa <?php echo $item["fullname"] ?> không ?")'
+                                class="btn btn-danger"><i class="fa-solid fa-trash"></i></a></td>
+                    </tr>
                 <?php endforeach; ?>
 
             </tbody>
@@ -146,8 +148,8 @@ if ($group > 0 || !empty($keyword)) {
             <ul class="pagination d-flex justify-content-center">
                 <!-- Xử lý nút trước -->
                 <?php if ($page > 1) : ?>
-                <li class='page-item'><a class='page-link'
-                        href="?<?php echo $queryString; ?>&page=<?php echo $page - 1 ?>">Trước </a></li>
+                    <li class='page-item'><a class='page-link'
+                            href="?<?php echo $queryString; ?>&page=<?php echo $page - 1 ?>">Trước </a></li>
                 <?php endif ?>
                 <!-- Tính vị trí bắt đầu -->
                 <?php $start = $page - 1;
@@ -157,8 +159,8 @@ if ($group > 0 || !empty($keyword)) {
 
                 ?>
                 <?php if ($start > 1) : ?>
-                <li class='page-item'><a class='page-link'
-                        href="?<?php echo $queryString; ?>&page=<?php echo $page - 1 ?>">... </a></li>
+                    <li class='page-item'><a class='page-link'
+                            href="?<?php echo $queryString; ?>&page=<?php echo $page - 1 ?>">... </a></li>
                 <?php endif;
                 $end = $page + 1;
                 if ($end > $maxPage) {
@@ -168,18 +170,18 @@ if ($group > 0 || !empty($keyword)) {
                 <?php
                 for ($i = $start; $i <= $end; $i++):
                 ?>
-                <li class="page-item <?php echo $page == $i ? 'active' : '' ?>"><a class="page-link"
-                        href="?<?php echo $queryString; ?>&page=<?php echo $i ?>"><?php echo $i ?></a></li>
+                    <li class="page-item <?php echo $page == $i ? 'active' : '' ?>"><a class="page-link"
+                            href="?<?php echo $queryString; ?>&page=<?php echo $i ?>"><?php echo $i ?></a></li>
                 <?php
                 endfor;
                 if ($end < $maxPage) : ?>
-                <li class='page-item'><a class='page-link'
-                        href="?<?php echo $queryString; ?>&page=<?php echo $page + 1 ?>">... </a></li>
+                    <li class='page-item'><a class='page-link'
+                            href="?<?php echo $queryString; ?>&page=<?php echo $page + 1 ?>">... </a></li>
                 <?php endif; ?>
                 <!-- Xử lý nút sau -->
                 <?php if ($page  < $maxPage) : ?>
-                <li class='page-item'><a class='page-link'
-                        href="?<?php echo $queryString; ?>&page=<?php echo $page + 1 ?>">Sau </a></li>
+                    <li class='page-item'><a class='page-link'
+                            href="?<?php echo $queryString; ?>&page=<?php echo $page + 1 ?>">Sau </a></li>
                 <?php endif ?>
             </ul>
         </nav>

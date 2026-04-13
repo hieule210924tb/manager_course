@@ -52,7 +52,7 @@ if (!isLogin()) {
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="<?php echo _HOST_URL_TEMPLATES ?>/assets/css/adminlte.css" />
     <!--end::Required Plugin(AdminLTE)-->
-
+    <link rel="stylesheet" href="<?php echo _HOST_URL_TEMPLATES ?>/assets/css/custom.css?ver<?php rand() ?>" />
     <!-- apexcharts -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
         integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0=" crossorigin="anonymous" />
