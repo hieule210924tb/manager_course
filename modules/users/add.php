@@ -57,7 +57,7 @@ if (isPost()) {
     }
 
     if (empty($errors)) {
-        $data = [
+        $dataInsert = [
             'fullname' => $filter['fullname'],
             'email' => $filter['email'],
             'phone' => $filter['phone'],
@@ -67,7 +67,7 @@ if (isPost()) {
             'address' => (!empty($filter['address']) ? $filter['address'] : null),
             'created_at' => date("Y-m-d H:i:s")
         ];
-        $insertStatus = insert('users', $data);
+        $insertStatus = insert('users', $dataInsert);
         if ($insertStatus) {
             setSessionFlash('msg', 'Thêm người dùng thành công.');
             setSessionFlash('msg_type', 'success');
