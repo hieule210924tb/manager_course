@@ -116,12 +116,12 @@ if (isPost()) {
                 <input type="text" name="price" value="<?php oldData($oldData, 'price') ?>" class="form-control"
                     placeholder="Giá">
                 <?php displayErrors($errorArr, 'price') ?>
-                <img src="" id="previewImage" class="previewImage" style="display:none" alt="">
             </div>
             <div class="col-6">
                 <label for="thumbnail">Thumbnail</label>
                 <input type="file" name="thumbnail" id="thumbnail" class="form-control" placeholder="Thumbnail">
                 <?php displayErrors($errorArr, 'thumbnail') ?>
+                <img src="#" id="previewImage" class="previewImage mt-3" width="200px" alt="">
             </div>
             <div class="col-3">
                 <label for="group">Lĩnh vực</label>
@@ -142,4 +142,40 @@ if (isPost()) {
         </div>
     </form>
 </div>
+<script>
+    // đoạn js để xử lý xem trước ảnh
+    const thumbInput = document.getElementById('thumbnail')
+    const previewImg = document.getElementById('previewImage')
+    thumbInput.addEventListener('change', () => {
+        const file = thumbInput.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImg.setAttribute('src', e.target.result);
+                previewImg.style.display = 'block !important';
+            }
+            reader.readAsDataURL(file)
+        } else {
+            previewImg.style.display = 'none';
+        }
+    })
+</script>
+<script>
+    //Hàm giúp chuyển text thành slug
+    function createSlug(strig) {
+        return strig.toLowerCase()
+            .normalize('NFD') // chuyển ký tự có dấu thành tổ hợp
+            .replace(/[\u0300-\u036f]/g, '') // xoá dấu
+            .replace(/đ/g, 'd') // thay đ -> d
+            .replace(/[^a-z0-9\s-]/g, '') // xoá ký tự đặc biệt
+            .trim() // bỏ khoảng trắng đầu/cuối
+            .replace(/\s+/g, '-') // thay khoảng trắng -> -
+            .replace(/-+/g, '-'); // bỏ trùng dấu -
+    }
+    const name = document.getElementById('name')
+    name.addEventListener('input', () => {
+        const getValue = name.value;
+        document.getElementById('slug').value = createSlug(getValue)
+    })
+</script>
 <?php layout('footer'); ?>
