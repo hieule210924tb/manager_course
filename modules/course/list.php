@@ -39,14 +39,8 @@ if (isGet()) {
 }
 // Xử lý phân trang
 // Lấy tổng dữ liệu có trong users
-$maxData = getRows("
-    SELECT a.id 
-    FROM course a
-    INNER JOIN course_category b 
-    ON a.category_id = b.id
-    $chuoiWhere
-");
-$perPage = 1; // cấu hình 1 trang mấy dòng
+$maxData = getRows("SELECT id FROM course");
+$perPage = 3; // cấu hình 1 trang mấy dòng
 $maxPage = ceil($maxData / $perPage);
 $offset = 0;
 $page = 1;
@@ -79,7 +73,7 @@ $msg_type = getSessionFlash('msg_type');
 ?>
 <div class="container mt-4">
     <div class="container-fluid mt-3">
-        <a href="?module=users&action=add" class="btn btn-success mb-3"><i class=" fa-solid fa-plus"></i>Thêm mới khóa
+        <a href="?module=course&action=add" class="btn btn-success mb-3"><i class=" fa-solid fa-plus"></i>Thêm mới khóa
             học</a>
         <?php if (!empty($msg)) getMsg($msg, $msg_type); ?>
         <form action="" class="mb-3" method="get">
