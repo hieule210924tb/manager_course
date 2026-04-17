@@ -66,7 +66,7 @@ $msg_type = getSessionFlash('msg_type');
         <div class="row">
             <div class="col-6">
                 <?php
-                if (!empty($filter['id']) && $filter['type'] == "edit") {
+                if (!empty($filter['id']) && (!empty($filter['type']) && $filter['type'] == "edit")) {
                     require_once 'edit.php';
                 } else {
                     require_once 'add.php';

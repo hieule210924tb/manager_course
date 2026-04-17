@@ -68,6 +68,8 @@ $errorArr = getSessionFlash('errors');
 ?>
 <h2>Chỉnh sửa lĩnh vực</h2>
 <form action="" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="type" value="edit">
+    <input type="hidden" name="id" value="<?php echo $cateId ?>">
     <div class="col-12">
         <label for="name">Tên lĩnh vực</label>
         <input type="text" id="name" name="name" value="<?php oldData($oldData, 'name') ?>" class="form-control"
