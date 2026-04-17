@@ -44,6 +44,7 @@ $offset = ($page - 1) * $perPage;
 
 $getDetailCate = getAll("SELECT *
 from course_category  $chuoiWhere
+order by created_at desc
 limit $offset, $perPage
 ");
 if (!empty($keyword)) {
@@ -62,12 +63,15 @@ $msg_type = getSessionFlash('msg_type');
 ?>
 <div class="container mt-4">
     <div class="container-fluid mt-3">
-        <!-- <a href="?module=course&action=add" class="btn btn-success mb-3"><i class=" fa-solid fa-plus"></i>Thêm mới khóa
-            học</a> -->
         <div class="row">
             <div class="col-6">
-                <h2>Thêm mới hoặc chỉnh sửa</h2>
-                <?php require_once 'add.php' ?>
+                <?php
+                if (!empty($filter['id']) && $filter['type'] == "edit") {
+                    require_once 'edit.php';
+                } else {
+                    require_once 'add.php';
+                }
+                ?>
             </div>
             <div class="col-6">
                 <h2>Danh sách lĩnh vực</h2>
@@ -98,16 +102,16 @@ $msg_type = getSessionFlash('msg_type');
                     </thead>
                     <tbody>
                         <?php foreach ($getDetailCate as $key => $item) : ?>
-                            <tr>
-                                <th scope="row"><?php echo $key + 1 ?></th>
-                                <td><?php echo $item['name'] ?></td>
-                                <td><?php echo $item['created_at'] ?></td>
-                                <td><a href="?module=course_category&action=edit&id=<?php echo $item['id'] ?>"
-                                        class="btn btn-warning"><i class="fa-solid fa-pencil"></i></a></td>
-                                <td><a href="?module=course_category&action=delete&id=<?php echo $item['id'] ?> "
-                                        onclick='return confirm("Bạn có chắc chắn muốn xóa <?php echo $item["name"] ?> không ?" )'
-                                        class="btn btn-danger"><i class="fa-solid fa-trash"></i></a></td>
-                            </tr>
+                        <tr>
+                            <th scope="row"><?php echo $key + 1 ?></th>
+                            <td><?php echo $item['name'] ?></td>
+                            <td><?php echo $item['created_at'] ?></td>
+                            <td><a href="?module=course_category&action=list&id=<?php echo $item['id'] ?>&type=edit"
+                                    class="btn btn-warning"><i class="fa-solid fa-pencil"></i></a></td>
+                            <td><a href="?module=course_category&action=delete&id=<?php echo $item['id'] ?> "
+                                    onclick='return confirm("Bạn có chắc chắn muốn xóa <?php echo $item["name"] ?> không ?" )'
+                                    class="btn btn-danger"><i class="fa-solid fa-trash"></i></a></td>
+                        </tr>
                         <?php endforeach; ?>
 
                     </tbody>
@@ -116,8 +120,8 @@ $msg_type = getSessionFlash('msg_type');
                     <ul class="pagination d-flex justify-content-center">
                         <!-- Xử lý nút trước -->
                         <?php if ($page > 1) : ?>
-                            <li class='page-item'><a class='page-link'
-                                    href="?<?php echo $queryString; ?>&page=<?php echo $page - 1 ?>">Trước </a></li>
+                        <li class='page-item'><a class='page-link'
+                                href="?<?php echo $queryString; ?>&page=<?php echo $page - 1 ?>">Trước </a></li>
                         <?php endif ?>
                         <!-- Tính vị trí bắt đầu -->
                         <?php $start = $page - 1;
@@ -127,8 +131,8 @@ $msg_type = getSessionFlash('msg_type');
 
                         ?>
                         <?php if ($start > 1) : ?>
-                            <li class='page-item'><a class='page-link'
-                                    href="?<?php echo $queryString; ?>&page=<?php echo $page - 1 ?>">... </a></li>
+                        <li class='page-item'><a class='page-link'
+                                href="?<?php echo $queryString; ?>&page=<?php echo $page - 1 ?>">... </a></li>
                         <?php endif;
                         $end = $page + 1;
                         if ($end > $maxPage) {
@@ -138,18 +142,18 @@ $msg_type = getSessionFlash('msg_type');
                         <?php
                         for ($i = $start; $i <= $end; $i++):
                         ?>
-                            <li class="page-item <?php echo $page == $i ? 'active' : '' ?>"><a class="page-link"
-                                    href="?<?php echo $queryString; ?>&page=<?php echo $i ?>"><?php echo $i ?></a></li>
+                        <li class="page-item <?php echo $page == $i ? 'active' : '' ?>"><a class="page-link"
+                                href="?<?php echo $queryString; ?>&page=<?php echo $i ?>"><?php echo $i ?></a></li>
                         <?php
                         endfor;
                         if ($end < $maxPage) : ?>
-                            <li class='page-item'><a class='page-link'
-                                    href="?<?php echo $queryString; ?>&page=<?php echo $page + 1 ?>">... </a></li>
+                        <li class='page-item'><a class='page-link'
+                                href="?<?php echo $queryString; ?>&page=<?php echo $page + 1 ?>">... </a></li>
                         <?php endif; ?>
                         <!-- Xử lý nút sau -->
                         <?php if ($page  < $maxPage) : ?>
-                            <li class='page-item'><a class='page-link'
-                                    href="?<?php echo $queryString; ?>&page=<?php echo $page + 1 ?>">Sau </a></li>
+                        <li class='page-item'><a class='page-link'
+                                href="?<?php echo $queryString; ?>&page=<?php echo $page + 1 ?>">Sau </a></li>
                         <?php endif ?>
                     </ul>
                 </nav>

@@ -31,6 +31,7 @@ if (isPost()) {
         if ($insertStatus) {
             setSessionFlash('msg', 'Thêm lĩnh vực thành công.');
             setSessionFlash('msg_type', 'success');
+            redirect("?module=course_category&action=list");
         } else {
             setSessionFlash('msg', 'Thêm dữ liệu lĩnh vực thất bại.');
             setSessionFlash('msg_type', 'danger');
@@ -47,7 +48,7 @@ $msg_type = getSessionFlash('msg_type');
 $oldData = getSessionFlash('oldData');
 $errorArr = getSessionFlash('errors');
 ?>
-
+<h2>Thêm mới lĩnh vực</h2>
 <form action="" method="POST" enctype="multipart/form-data">
     <div class="col-12">
         <label for="name">Tên lĩnh vực</label>
@@ -65,20 +66,20 @@ $errorArr = getSessionFlash('errors');
 
 
 <script>
-    //Hàm giúp chuyển text thành slug
-    function createSlug(string) {
-        return string.toLowerCase()
-            .normalize('NFD') // chuyển ký tự có dấu thành tổ hợp
-            .replace(/[\u0300-\u036f]/g, '') // xoá dấu
-            .replace(/đ/g, 'd') // thay đ -> d
-            .replace(/[^a-z0-9\s-]/g, '') // xoá ký tự đặc biệt
-            .trim() // bỏ khoảng trắng đầu/cuối
-            .replace(/\s+/g, '-') // thay khoảng trắng -> -
-            .replace(/-+/g, '-'); // bỏ trùng dấu -
-    }
-    const name = document.getElementById('name')
-    name.addEventListener('input', () => {
-        const getValue = name.value;
-        document.getElementById('slug').value = createSlug(getValue)
-    })
+//Hàm giúp chuyển text thành slug
+function createSlug(string) {
+    return string.toLowerCase()
+        .normalize('NFD') // chuyển ký tự có dấu thành tổ hợp
+        .replace(/[\u0300-\u036f]/g, '') // xoá dấu
+        .replace(/đ/g, 'd') // thay đ -> d
+        .replace(/[^a-z0-9\s-]/g, '') // xoá ký tự đặc biệt
+        .trim() // bỏ khoảng trắng đầu/cuối
+        .replace(/\s+/g, '-') // thay khoảng trắng -> -
+        .replace(/-+/g, '-'); // bỏ trùng dấu -
+}
+const name = document.getElementById('name')
+name.addEventListener('input', () => {
+    const getValue = name.value;
+    document.getElementById('slug').value = createSlug(getValue)
+})
 </script>
