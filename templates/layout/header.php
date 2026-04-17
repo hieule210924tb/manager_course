@@ -7,6 +7,25 @@ if (!isLogin()) {
 }
 ?>
 
+
+<!-- Lấy thông tin user -->
+<?php
+$token = getSession('token_login');
+if (!empty($token)) {
+    $checkTokenLogin = getOne("SELECT * from token_login where token ='$token'");
+    if (!empty($checkTokenLogin)) {
+        $user_id = $checkTokenLogin['user_id'];
+        $getUserDetail = getOne("SELECT fullname , avatar from users where id = '$user_id'");
+        if (!empty($getUserDetail)) {
+            $nameUser = $getUserDetail['fullname'];
+            $avatar = $getUserDetail['avatar'];
+        }
+    }
+}
+
+
+?>
+
 <!doctype html>
 <html lang="en">
 <!--begin::Head-->
@@ -78,30 +97,30 @@ if (!isLogin()) {
                     <!--begin::User Menu Dropdown-->
                     <li class="nav-item dropdown user-menu">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img src="./assets/img/user2-160x160.jpg" class="user-image rounded-circle shadow"
-                                alt="User Image" />
-                            <span class="d-none d-md-inline">Alexander Pierce</span>
+                            <img src="<?php echo (isset($avatar)) ? _HOST_URL . '/' . $avatar : false ?>"
+                                class="user-image rounded-circle shadow" alt="User Image" />
+                            <span class="d-none d-md-inline"><?php echo (isset($nameUser)) ? $nameUser : false ?></span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                             <!--begin::User Image-->
                             <li class="user-header text-bg-primary">
-                                <img src="./assets/img/user2-160x160.jpg" class="rounded-circle shadow"
-                                    alt="User Image" />
+                                <img src="<?php echo (isset($avatar)) ? $avatar : false ?>"
+                                    class="rounded-circle shadow" alt="User Image" />
                                 <p>
-                                    Alexander Pierce - Web Developer
-                                    <small>Member since Nov. 2023</small>
+                                    <?php echo (isset($nameUser)) ? $nameUser : false ?>
                                 </p>
                             </li>
                             <!--end::User Image-->
                             <!--begin::Menu Footer-->
                             <li class="user-footer">
-                                <a href="#" class="btn btn-outline-secondary w-100">Profile</a>
+                                <a href="?module=users&action=profile"
+                                    class="btn btn-outline-secondary w-100">Profile</a>
                             </li>
                             <!--end::Menu Footer-->
                             <!--begin::Menu Footer-->
                             <li class="user-footer">
-                                <a href=" ?module=auth&action=logout"
-                                    class="btn btn-outline-danger float-end w-100">Đăng xuất</a>
+                                <a href="?module=auth&action=logout" class="btn btn-outline-danger float-end w-100">Đăng
+                                    xuất</a>
                             </li>
                             <!--end::Menu Footer-->
                         </ul>

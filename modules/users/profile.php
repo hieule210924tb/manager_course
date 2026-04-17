@@ -3,7 +3,7 @@ if (!defined('_HIEU')) {
     die('Truy cập không hợp lệ');
 }
 $data = [
-    'title' => 'Chỉnh sửa người dùng'
+    'title' => 'Thông tin người dùng'
 ];
 layout('header', $data);
 layout('sidebar');
@@ -14,18 +14,14 @@ $errorArr = [];
 $oldData = [];
 
 $getData = filterData('GET');
-if (!empty($getData['id'])) {
-    $user_id = $getData['id'];
-    $detailUser = getOne("SELECT * FROM users where id ='$user_id'");
-    if (empty($detailUser)) {
-        setSessionFlash('msg', 'Người dùng không tồn tại.');
-        setSessionFlash('msg_type', 'danger');
-        redirect('?module=users&action=list');
+// Lấy thông tin user 
+$token = getSession('token_login');
+if (!empty($token)) {
+    $checkTokenLogin = getOne("SELECT * from token_login where token ='$token'");
+    if (!empty($checkTokenLogin)) {
+        $user_id = $checkTokenLogin['user_id'];
+        $detailUser = getOne("SELECT * from users where id = '$user_id'");
     }
-} else {
-    setSessionFlash('msg', 'Có lỗi xảy ra vui lòng thử lại.');
-    setSessionFlash('msg_type', 'danger');
-    redirect('?module=users&action=list');
 }
 if (isPost()) {
     $filter = filterData();
@@ -78,22 +74,37 @@ if (isPost()) {
             'fullname' => $filter['fullname'],
             'email' => $filter['email'],
             'phone' => $filter['phone'],
-            'group_id' => $filter['group_id'],
-            'status' => $filter['status'],
             'address' => (!empty($filter['address']) ? $filter['address'] : null),
             'updated_at' => date("Y-m-d H:i:s")
         ];
+        if (!empty($_FILES['avatar']['name'])) {
+            // Xử lý avatar lên
+            $uploadDir = './templates/upload/'; // upload ảnh lên đâu
+            if (!file_exists($uploadDir)) { // kiểm tra thư mục này đã tồn tại hay chưa
+                mkdir($uploadDir, 0777, true); //Tạo mới thư mục upload nếu chưa có
+            }
+            $fileName = basename($_FILES['avatar']['name']);
+            $targetFile =  $uploadDir . time() . '-' . $fileName; // thêm time() để tránh bị trùng lặp tên ảnh
+            $thumb = "";
+            $checkMove = move_uploaded_file($_FILES['avatar']['tmp_name'], $targetFile);
+            $targetFile = ltrim($targetFile, './');
+            if ($checkMove) {
+                $thumb = $targetFile;
+            }
+
+            $dataUpdate['avatar'] = $thumb;
+        }
         if (!empty($filter['password'])) {
             $dataUpdate['password'] = password_hash($filter['password'], PASSWORD_DEFAULT);
         }
         $condition = "id=" . $user_id;
         $updateStatus = update('users', $dataUpdate, $condition);
         if ($updateStatus) {
-            setSessionFlash('msg', 'Cập nhật người dùng thành công.');
+            setSessionFlash('msg', 'Cập nhật thành công.');
             setSessionFlash('msg_type', 'success');
-            redirect('?module=users&action=list');
+            redirect('?module=users&action=profile');
         } else {
-            setSessionFlash('msg', 'Cập nhật người dùng thất bại.');
+            setSessionFlash('msg', 'Cập nhật thất bại.');
             setSessionFlash('msg_type', 'danger');
         }
     } else {
@@ -113,10 +124,10 @@ if (!empty($detailUser)) {
 $errorArr = getSessionFlash('errors');
 ?>
 <div class="container px-5">
-    <h2>Chỉnh sửa người dùng</h2>
+    <h2>Thông tin tài khoản</h2>
     <hr>
     <?php if (!empty($msg)) getMsg($msg, $msg_type); ?>
-    <form action="" method="POST">
+    <form action="" method="POST" enctype="multipart/form-data">
         <div class="row g-3">
             <div class="col-6">
                 <label for="fullname">Họ và tên</label>
@@ -138,7 +149,8 @@ $errorArr = getSessionFlash('errors');
             </div>
             <div class="col-6">
                 <label for="password">Mật khẩu</label>
-                <input type="password" name="password" class="form-control" placeholder="Mật khẩu">
+                <input type="password" name="password" value="<?php oldData($oldData, 'password') ?>"
+                    class="form-control" placeholder="Mật khẩu">
                 <?php displayErrors($errorArr, 'password') ?>
             </div>
             <div class="col-6">
@@ -147,33 +159,35 @@ $errorArr = getSessionFlash('errors');
                     class="form-control" placeholder="Địa chỉ">
                 <?php displayErrors($errorArr, 'address') ?>
             </div>
-            <div class="col-3">
-                <label for="group">Phân cấp người dùng</label>
-                <select name="group_id" id="group" class="form-select form-control">
-                    <?php
-                    $getGroup = getAll("SELECT * from  `groups`");
-                    foreach ($getGroup as $item):
-                    ?>
-                    <option value="<?php echo $item['id']; ?>"
-                        <?php echo ($oldData['group_id'] == $item['id']) ? 'selected' : false ?>>
-                        <?php echo $item['name']; ?>
-                    </option>
-                    <?php endforeach ?>
-                </select>
-            </div>
-            <div class="col-3">
-                <label for="status">Trạng thái tài khoản</label>
-                <select name="status" id="status" class="form-select form-control">
-                    <option value="0" <?php echo ($oldData['status'] == 0) ? 'selected' : false ?>>Chưa kích hoạt
-                    </option>
-                    <option value="1" <?php echo ($oldData['status'] == 1) ? 'selected' : false ?>>Đã kích hoạt</option>
-                </select>
+            <div class="col-6">
+                <label for="avatar">Ảnh đại diện</label>
+                <input type="file" name="avatar" id="avatar" class="form-control" placeholder="Thay ảnh đại diện">
+                <?php displayErrors($errorArr, 'avatar') ?>
+                <img src="<?php echo _HOST_URL  . '/' ?><?php echo !empty(($oldData['avatar'])) ? $oldData['avatar'] : false ?>"
+                    id="previewImage" class="previewImage mt-3" width="200px" alt="">
             </div>
         </div>
         <div>
             <button type="submit" class="btn btn-success">Xác nhận gửi</button>
-            <a href="?module=users&action=list" class="btn btn-primary">Quay lại </a>
         </div>
     </form>
 </div>
+<script>
+// đoạn js để xử lý xem trước ảnh
+const thumbInput = document.getElementById('avatar')
+const previewImg = document.getElementById('previewImage')
+thumbInput.addEventListener('change', () => {
+    const file = thumbInput.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            previewImg.setAttribute('src', e.target.result);
+            previewImg.style.display = 'block !important';
+        }
+        reader.readAsDataURL(file)
+    } else {
+        previewImg.style.display = 'none';
+    }
+})
+</script>
 <?php layout('footer'); ?>
