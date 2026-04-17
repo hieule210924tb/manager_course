@@ -63,6 +63,7 @@ $msg_type = getSessionFlash('msg_type');
 ?>
 <div class="container mt-4">
     <div class="container-fluid mt-3">
+        <?php if (!empty($msg)) getMsg($msg, $msg_type); ?>
         <div class="row">
             <div class="col-6">
                 <?php
@@ -75,7 +76,6 @@ $msg_type = getSessionFlash('msg_type');
             </div>
             <div class="col-6">
                 <h2>Danh sách lĩnh vực</h2>
-                <?php if (!empty($msg)) getMsg($msg, $msg_type); ?>
                 <form action="" class="mb-3" method="get">
                     <input type="hidden" name="module" value="course_category">
                     <input type="hidden" name="action" value="list">
