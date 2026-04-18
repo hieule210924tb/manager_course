@@ -77,5 +77,6 @@ if (!empty($checkId['permission'])) {
             </tbody>
         </table>
         <button type="submit" class="btn btn-primary">Xác nhận</button>
+        <a href="?module=users&action=list" class="btn btn-success">Quay lại</a>
     </form>
 </div>
